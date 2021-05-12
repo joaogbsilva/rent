@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace RentWebMvc.Models
 {
-	public class Aluguel
+	public class Imovel
 	{
 		public int Id { get; set; }
 		public string Logradouro { get; set; }

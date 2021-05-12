@@ -1,6 +1,6 @@
 using System;
 
-namespace RentWebMvc.Models
+namespace RentWebMvc.Models.ViewModels
 {
 	public class ErrorViewModel
 	{

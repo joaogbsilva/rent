@@ -19,7 +19,7 @@ namespace RentWebMvc.Controllers
 
 		public IActionResult Contact()
 		{
-			ViewData["Message"] = "Your contact page.";
+			ViewData["Message"] = "Entre em contato comigo.";
 
 			return View();
 		}

@@ -61,7 +61,7 @@ namespace RentWebMvc
 			{
 				routes.MapRoute(
 					name: "default",
-					template: "{controller=Imovels}/{action=Index}/{id?}");
+					template: "{controller=Imoveis}/{action=Index}/{id?}");
 			});
 		}
 	}

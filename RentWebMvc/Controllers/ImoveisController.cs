@@ -9,11 +9,11 @@ using RentWebMvc.Models;
 
 namespace RentWebMvc.Controllers
 {
-    public class ImovelsController : Controller
+    public class ImoveisController : Controller
     {
         private readonly RentWebMvcContext _context;
 
-        public ImovelsController(RentWebMvcContext context)
+        public ImoveisController(RentWebMvcContext context)
         {
             _context = context;
         }

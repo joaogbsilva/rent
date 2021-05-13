@@ -14,7 +14,7 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="CEP" class="control-label"></label>
-                <input asp-for="CEP" id="cep" class="form-control viacep" />
+                <input asp-for="CEP" id="cep" class="form-control viacep cep" maxlength="9" />
                 <span asp-validation-for="CEP" class="text-danger"></span>
             </div>
             <div class="form-group">

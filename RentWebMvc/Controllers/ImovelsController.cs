@@ -48,9 +48,7 @@ namespace RentWebMvc.Controllers
             return View();
         }
 
-        // POST: Imovels/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: Imovels/Create        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Logradouro,Numero,Complemento,Bairro,CEP,Cidade,Estado,Alugado")] Imovel imovel)
@@ -80,9 +78,7 @@ namespace RentWebMvc.Controllers
             return View(imovel);
         }
 
-        // POST: Imovels/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: Imovels/Edit/5        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Logradouro,Numero,Complemento,Bairro,CEP,Cidade,Estado,Alugado")] Imovel imovel)

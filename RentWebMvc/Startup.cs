@@ -11,6 +11,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using RentWebMvc.Models;
+using RentWebMvc.Repository;
+using RentWebMvc.Repository.Interfaces;
 
 namespace RentWebMvc
 {
@@ -33,7 +35,7 @@ namespace RentWebMvc
 				options.MinimumSameSitePolicy = SameSiteMode.None;
 			});
 
-
+			services.AddScoped<IImovelRepository, ImovelRepository>();
 			services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
 		    services.AddDbContext<RentWebMvcContext>(options =>

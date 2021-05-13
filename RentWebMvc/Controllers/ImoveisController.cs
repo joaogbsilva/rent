@@ -6,143 +6,123 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using RentWebMvc.Models;
+using RentWebMvc.Repository.Interfaces;
 
 namespace RentWebMvc.Controllers
 {
-    public class ImoveisController : Controller
-    {
-        private readonly RentWebMvcContext _context;
+	public class ImoveisController : Controller
+	{
+		private readonly IImovelRepository _imovelRepo;
 
-        public ImoveisController(RentWebMvcContext context)
-        {
-            _context = context;
-        }
+		public ImoveisController(IImovelRepository imovelRepo)
+		{
+			_imovelRepo = imovelRepo;
+		}
 
-        // GET: Imovels
-        public async Task<IActionResult> Index()
-        {
-            return View(await _context.Imovel.ToListAsync());
-        }
+		// GET: Imovels
+		public async Task<IActionResult> Index()
+		{
+			return View(await _imovelRepo.GetAllImoveisAsync());
+		}
 
-        // GET: Imovels/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+		// GET: Imovels/Details/5
+		public async Task<IActionResult> Details(int id)
+		{
 
-            var imovel = await _context.Imovel
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (imovel == null)
-            {
-                return NotFound();
-            }
+			var imovel = await _imovelRepo.GetImovelById(id);
+			if (imovel == null)
+			{
+				return NotFound();
+			}
 
-            return View(imovel);
-        }
+			return View(imovel);
+		}
 
-        // GET: Imovels/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
+		// GET: Imovels/Create
+		public IActionResult Create()
+		{
+			return View();
+		}
 
-        // POST: Imovels/Create        
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Logradouro,Numero,Complemento,Bairro,CEP,Cidade,Estado,Alugado")] Imovel imovel)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(imovel);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(imovel);
-        }
+		// POST: Imovels/Create        
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> Create([Bind("Id,Logradouro,Numero,Complemento,Bairro,CEP,Cidade,Estado,Alugado")] Imovel imovel)
+		{
+			if (ModelState.IsValid)
+			{
+				_imovelRepo.Add(imovel);
+				await _imovelRepo.SaveAsync();
+				return RedirectToAction(nameof(Index));
+			}
+			return View(imovel);
+		}
 
-        // GET: Imovels/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+		// GET: Imovels/Edit/5
+		public async Task<IActionResult> Edit(int id)
+		{
+			var imovel = await _imovelRepo.GetImovelById(id);
+			if (imovel == null)
+			{
+				return NotFound();
+			}
+			return View(imovel);
+		}
 
-            var imovel = await _context.Imovel.FindAsync(id);
-            if (imovel == null)
-            {
-                return NotFound();
-            }
-            return View(imovel);
-        }
+		// POST: Imovels/Edit/5        
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> Edit(int id, [Bind("Id,Logradouro,Numero,Complemento,Bairro,CEP,Cidade,Estado,Alugado")] Imovel imovel)
+		{
+			if (id != imovel.Id)
+			{
+				return NotFound();
+			}
 
-        // POST: Imovels/Edit/5        
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Logradouro,Numero,Complemento,Bairro,CEP,Cidade,Estado,Alugado")] Imovel imovel)
-        {
-            if (id != imovel.Id)
-            {
-                return NotFound();
-            }
+			if (ModelState.IsValid)
+			{
+				try
+				{
+					_imovelRepo.Update(imovel);
+					await _imovelRepo.SaveAsync();
+				}
+				catch (DbUpdateConcurrencyException)
+				{
+					if (!_imovelRepo.ImovelExists(imovel.Id))
+					{
+						return NotFound();
+					}
+					else
+					{
+						throw;
+					}
+				}
+				return RedirectToAction(nameof(Index));
+			}
+			return View(imovel);
+		}
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(imovel);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ImovelExists(imovel.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(imovel);
-        }
+		// GET: Imovels/Delete/5
+		public async Task<IActionResult> Delete(int id)
+		{
+			var imovel = await _imovelRepo.GetImovelById(id);
+			if (imovel == null)
+			{
+				return NotFound();
+			}
 
-        // GET: Imovels/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+			return View(imovel);
+		}
 
-            var imovel = await _context.Imovel
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (imovel == null)
-            {
-                return NotFound();
-            }
-
-            return View(imovel);
-        }
-
-        // POST: Imovels/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var imovel = await _context.Imovel.FindAsync(id);
-            _context.Imovel.Remove(imovel);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        private bool ImovelExists(int id)
-        {
-            return _context.Imovel.Any(e => e.Id == id);
-        }
-    }
+		// POST: Imovels/Delete/5
+		[HttpPost, ActionName("Delete")]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> DeleteConfirmed(int id)
+		{
+			var imovel = await _imovelRepo.GetImovelById(id);
+			_imovelRepo.Delete(imovel);
+			await _imovelRepo.SaveAsync();
+			return RedirectToAction(nameof(Index));
+		}
+	}
 }
